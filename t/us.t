@@ -13,7 +13,7 @@ BEGIN {
 
 US: {
 	SKIP: {
-		skip 'Test requires Internet access', 4 unless(-e 't/online.enabled');
+		skip 'Test requires Internet access', 3 unless(-e 't/online.enabled');
 
 		eval {
 			require Test::Number::Delta;
@@ -23,7 +23,7 @@ US: {
 
 		if($@) {
 			diag('Test::Number::Delta not installed - skipping tests');
-			skip 'Test::Number::Delta not installed', 4;
+			skip('Test::Number::Delta not installed', 3);
 		}
 
 		my $geocoder = new_ok('Geo::Coder::DataScienceToolkit');
