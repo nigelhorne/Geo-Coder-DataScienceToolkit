@@ -18,11 +18,11 @@ http://www.datasciencetoolkit.org/
 
 =head1 VERSION
 
-Version 0.00
+Version 0.01
 
 =cut
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
