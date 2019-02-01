@@ -33,7 +33,7 @@ our $VERSION = '0.00';
 
 =head1 DESCRIPTION
 
-Geo::Coder::DataScienceToolkit provides an interface to datasciencetollkit,
+Geo::Coder::DataScienceToolkit provides an interface to datasciencetoolkit,
 a free geocode database covering the US and UK.
 
 =head1 METHODS
@@ -179,7 +179,7 @@ sub reverse_geocode {
 
 Nigel Horne <njh@bandsman.co.uk>
 
-Based on L<Geo::Coder::Coder::XYZ>.
+Based on L<Geo::Coder::XYZ>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
