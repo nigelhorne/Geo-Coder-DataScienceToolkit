@@ -2,7 +2,7 @@
 
 use warnings;
 use strict;
-use Test::Most tests => 14;
+use Test::Most tests => 16;
 
 BEGIN {
 	use_ok('Geo::Coder::DataScienceToolkit');
@@ -13,10 +13,10 @@ UK: {
 		if(!-e 't/online.enabled') {
 			if(!$ENV{AUTHOR_TESTING}) {
 				diag('Author tests not required for installation');
-				skip('Author tests not required for installation', 13);
+				skip('Author tests not required for installation', 15);
 			} else {
 				diag('Test requires Internet access');
-				skip('Test requires Internet access', 13);
+				skip('Test requires Internet access', 15);
 			}
 		}
 
@@ -34,7 +34,7 @@ UK: {
 
 		if($@) {
 			diag('Test::Number::Delta not installed - skipping tests');
-			skip 'Test::Number::Delta not installed', 13;
+			skip 'Test::Number::Delta not installed', 15;
 		}
 
 		my $geocoder = new_ok('Geo::Coder::DataScienceToolkit');
@@ -54,6 +54,10 @@ UK: {
 		$location = $geocoder->geocode(location => '10 Downing St., London, UK');
 		delta_within($location->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}, 51.51, 1e-2);
 		delta_within($location->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}, -0.13, 1e-2);
+
+		$location = $geocoder->geocode({ location => "13 Shooter's Hill, Buckland, Dover, Kent, England" });
+		delta_within($location->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}, 51.13, 1e-2);
+		delta_within($location->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}, 1.3, 1e-2);
 
 		does_carp_that_matches(sub {
 			$location = $geocoder->reverse_geocode(latlng => '51.50,-0.13');
