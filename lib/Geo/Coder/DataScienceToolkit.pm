@@ -5,7 +5,7 @@ use warnings;
 
 use Carp;
 use Encode;
-use JSON;
+use JSON::MaybeXS;
 use HTTP::Request;
 use LWP::UserAgent;
 use LWP::Protocol::http;
@@ -112,7 +112,7 @@ sub geocode {
 		return { };
 	}
 
-	my $json = JSON->new()->utf8();
+	my $json = JSON::MaybeXS->new()->utf8();
 	my $rc;
 	eval {
 		$rc = $json->decode($res->content());

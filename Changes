@@ -1,5 +1,8 @@
 Revision history for Geo-Coder-DataScienceToolkit
 
+0.03
+	Use JSON::MaybeXS instead of JSON
+
 0.02	Sat Feb  2 08:02:49 EST 2019
 	Documentation fixes
 
