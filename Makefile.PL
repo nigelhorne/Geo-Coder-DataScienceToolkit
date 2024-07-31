@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 use strict;
 use warnings;
 use ExtUtils::MakeMaker 6.64;	# 6.64 for TEST_REQUIRES
@@ -6,14 +8,22 @@ use IO::Socket::INET;
 
 my $online_tests;
 
-if($ENV{AUTHOR_TESTING}) {
+if($ENV{'AUTHOR_TESTING'}) {
 	$online_tests = are_online();
 } else {
 	Getopt::Long::GetOptions('online-tests!' => \$online_tests);
+
+	if(!defined($online_tests)) {
+		$online_tests = are_online();
+	}
+	if(!$online_tests) {
+		print "On-line tests have been disabled\n";
+	}
 }
 
 my $test_requires = {
 	'Test::Most' => 0,
+	'Test::Needs' => 0,
 	'Test::NoWarnings' => 0,
 };
 
@@ -67,14 +77,12 @@ WriteMakefile(
 
 sub are_online
 {
-	return 0 if($ENV{'AUTOMATED_TESTING'});
-	return 0 if($ENV{'NO_NETWORK_TESTING'});
-	return 0 if(!-t STDIN);
-	my $s = IO::Socket::INET->new(
+	return 0 if($ENV{'NO_NETWORK_TESTING'} || $ENV{'TRAVIS_PERL_VERSION'}) || $ENV{'AUTOMATED_TESTING'} || (!-t STDIN);
+
+	if(my $s = IO::Socket::INET->new(
 		PeerAddr => 'www.datasciencetoolkit.org:80',
 		Timeout => 10
-	);
-	if($s) {
+	)) {
 		if($ENV{'PERL_MM_USE_DEFAULT'}) {
 			close($s);
 			return 1;
