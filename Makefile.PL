@@ -8,6 +8,13 @@ use IO::Socket::INET;
 
 my $online_tests;
 
+if(defined($ENV{'GITHUB_ACTION'}) || defined($ENV{'CIRCLECI'}) || defined($ENV{'TRAVIS_PERL_VERSION'}) || defined($ENV{'APPVEYOR'})) {
+	# Prevent downloading and installing stuff
+	warn 'AUTOMATED_TESTING added for you' if(!defined($ENV{'AUTOMATED_TESTING'}));
+	$ENV{'AUTOMATED_TESTING'} = 1;
+	$ENV{'NO_NETWORK_TESTING'} = 1;
+}
+
 if($ENV{'AUTHOR_TESTING'}) {
 	$online_tests = are_online();
 } else {
@@ -24,7 +31,7 @@ if($ENV{'AUTHOR_TESTING'}) {
 my $test_requires = {
 	'Test::Most' => 0,
 	'Test::Needs' => 0,
-	'Test::NoWarnings' => 0,
+	'Test::NoWarnings' => 0
 };
 
 if($online_tests) {
@@ -35,6 +42,15 @@ if($online_tests) {
 	$test_requires->{'Test::Carp'} = 0;
 } else {
 	unlink('t/online.enabled');
+}
+
+my $dist = {
+	COMPRESS => 'gzip -9f',
+	SUFFIX => 'gz'
+};
+
+if($^O eq 'darwin') {
+	$dist->{'TAR'} = 'gtar';
 }
 
 WriteMakefile(
@@ -55,8 +71,7 @@ WriteMakefile(
 	'LWP::UserAgent' => 0,
 	'LWP::Protocol::http' => 0,
 	'URI' => 0,
-    },
-    dist		=> { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    }, dist => $dist,
     clean		=> { FILES => 'Geo-Coder-DataScienceToolkit-*' },
     META_MERGE		=> {
     	'meta-spec' => { version => 2 },
@@ -77,7 +92,7 @@ WriteMakefile(
 
 sub are_online
 {
-	return 0 if($ENV{'NO_NETWORK_TESTING'} || $ENV{'TRAVIS_PERL_VERSION'}) || $ENV{'AUTOMATED_TESTING'} || (!-t STDIN);
+	return 0 if($ENV{'NO_NETWORK_TESTING'} || $ENV{'CIRCLECI'} || $ENV{'TRAVIS_PERL_VERSION'} || $ENV{'AUTOMATED_TESTING'} || $ENV{'NONINTERACTIVE_TESTING'} || (!-t STDIN));
 
 	if(my $s = IO::Socket::INET->new(
 		PeerAddr => 'www.datasciencetoolkit.org:80',

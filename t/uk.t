@@ -2,7 +2,11 @@
 
 use warnings;
 use strict;
+
 use Test::Most tests => 16;
+use Test::LWP::UserAgent;
+use Test::Carp;
+use Test::Number::Delta;
 
 BEGIN {
 	use_ok('Geo::Coder::DataScienceToolkit');
@@ -18,23 +22,6 @@ UK: {
 				diag('Test requires Internet access');
 				skip('Test requires Internet access', 15);
 			}
-		}
-
-		require Test::LWP::UserAgent;
-		Test::LWP::UserAgent->import();
-
-		require Test::Carp;
-		Test::Carp->import();
-
-		eval {
-			require Test::Number::Delta;
-
-			Test::Number::Delta->import();
-		};
-
-		if($@) {
-			diag('Test::Number::Delta not installed - skipping tests');
-			skip 'Test::Number::Delta not installed', 15;
 		}
 
 		my $geocoder = new_ok('Geo::Coder::DataScienceToolkit');
