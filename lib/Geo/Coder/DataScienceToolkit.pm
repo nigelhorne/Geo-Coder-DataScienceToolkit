@@ -86,16 +86,22 @@ sub geocode {
 		return(__PACKAGE__->new()->parse($self));
 	} elsif(ref($_[0]) eq 'HASH') {
 		%params = %{$_[0]};
-	} elsif(ref($_[0])) {
-		Carp::croak('Usage: ', __PACKAGE__, '::geocode(location => $location)');
+	} elsif(scalar(@_) == 1) {
+		$params{'location'} = shift;
 	} elsif(scalar(@_) && (scalar(@_) % 2 == 0)) {
 		%params = @_;
 	} else {
-		$params{'location'} = shift;
+		Carp::croak('Usage: ', __PACKAGE__, '::geocode(location => $location)');
 	}
 
 	my $location = $params{location}
 		or Carp::croak("Usage: geocode(location => \$location)");
+
+	# Fail when the input is just a set of numbers
+	if($params{'location'} !~ /\D/) {
+		Carp::croak('Usage: ', __PACKAGE__, ": invalid input to geocode(), $params{location}");
+		return;
+	}
 
 	if (Encode::is_utf8($location)) {
 		$location = Encode::encode_utf8($location);
