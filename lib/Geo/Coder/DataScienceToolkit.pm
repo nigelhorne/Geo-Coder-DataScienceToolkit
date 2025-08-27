@@ -9,6 +9,7 @@ use JSON::MaybeXS;
 use HTTP::Request;
 use LWP::UserAgent;
 use LWP::Protocol::http;
+use Object::Configure 0.14;
 use URI;
 
 =head1 NAME
@@ -50,15 +51,15 @@ a free geocode database covering the US and UK.
 sub new {
 	my $proto = shift;
 	my $class = ref($proto) || $proto;
-	my %params = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
+	my $params = Object::Configure::configure($class, @_ ? \@_ : undef);
 
-	my $ua = delete $params{ua} || LWP::UserAgent->new(agent => __PACKAGE__ . "/$VERSION");
+	my $ua = delete $params->{ua} || LWP::UserAgent->new(agent => __PACKAGE__ . "/$VERSION");
 	# if(!defined($params{'host'})) {
 		# $ua->ssl_opts(verify_hostname => 0);	# Yuck
 	# }
-	my $host = delete $params{host} || 'www.datasciencetoolkit.org';
+	my $host = $params->{host} || 'www.datasciencetoolkit.org';
 
-	return bless { ua => $ua, host => $host }, $class;
+	return bless { %{$params}, ua => $ua, host => $host }, $class;
 }
 
 =head2 geocode

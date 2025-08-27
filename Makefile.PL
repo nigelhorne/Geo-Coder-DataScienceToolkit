@@ -8,6 +8,14 @@ use IO::Socket::INET;
 
 my $online_tests;
 
+# Test for broken smokers that don't set AUTOMATED_TESTING
+if(my $reporter = $ENV{'PERL_CPAN_REPORTER_CONFIG'}) {
+	if($reporter =~ /smoker/i) {
+		warn 'AUTOMATED_TESTING added for you' if(!defined($ENV{'AUTOMATED_TESTING'}));
+		$ENV{'AUTOMATED_TESTING'} = 1;
+	}
+}
+
 if(defined($ENV{'GITHUB_ACTION'}) || defined($ENV{'CIRCLECI'}) || defined($ENV{'TRAVIS_PERL_VERSION'}) || defined($ENV{'APPVEYOR'})) {
 	# Prevent downloading and installing stuff
 	warn 'AUTOMATED_TESTING added for you' if(!defined($ENV{'AUTOMATED_TESTING'}));
@@ -70,6 +78,7 @@ WriteMakefile(
 	'HTTP::Request' => 0,
 	'LWP::UserAgent' => 0,
 	'LWP::Protocol::http' => 0,
+	'Object::Configure' => 0.14,
 	'URI' => 0,
     }, dist => $dist,
     clean		=> { FILES => 'Geo-Coder-DataScienceToolkit-*' },

@@ -4,8 +4,9 @@ Revision history for Geo-Coder-DataScienceToolkit
 	geocode(): croak when input is just a set of numbers
 	Use JSON::MaybeXS instead of JSON
 	Use gtar to create a distribution on Macs
-	Use Test::Needs
+	Use Test::Needs and Object::Configure
 	Use Test::DescribeMe to simplify tests
+	Handle broken smokers
 
 0.02	Sat Feb  2 08:02:49 EST 2019
 	Documentation fixes
