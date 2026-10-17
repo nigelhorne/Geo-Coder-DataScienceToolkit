@@ -12,6 +12,17 @@ use LWP::Protocol::http;
 use Object::Configure 0.14;
 use URI;
 
+# Geo::Coder::Free::Validate holds the one definition of what counts as a
+# location.  Look for it when this module is loaded, so that a site with
+# Geo::Coder::Free installed gets that definition and not a second copy of it.
+# It is not a prerequisite: without it a reference is refused here, which is
+# the case this module used to get wrong by testing the string the reference
+# turns into instead of testing the value.
+my $have_validate = eval {
+	require Geo::Coder::Free::Validate;
+	Geo::Coder::Free::Validate->can('_valid_location') ? 1 : 0;
+};
+
 =head1 NAME
 
 Geo::Coder::DataScienceToolkit - Provides a geocoding functionality using
@@ -95,12 +106,28 @@ sub geocode {
 		Carp::croak('Usage: ', __PACKAGE__, '::geocode(location => $location)');
 	}
 
-	my $location = $params{location}
-		or Carp::croak("Usage: geocode(location => \$location)");
+	my $location = $params{location};
+	# A scalar reference is one way of passing the string it points at, and
+	# Params::Get dereferences it when it is the only argument.  Do it here as
+	# well, in every calling form, so that it means the string however the
+	# method is called.
+	$location = ${$location} if ref($location) eq 'SCALAR';
+
+	# A reference is not a location, however it would print.  Checked before the
+	# "is there anything to look up?" test below, so that a reference is refused
+	# for being a reference rather than for being false.
+	if(ref($location) && !_could_be_a_location($location)) {
+		Carp::croak('Usage: ', __PACKAGE__, ': invalid input to geocode(), a reference is not a location');
+		return;
+	}
+
+	unless($location) {
+		Carp::croak("Usage: geocode(location => \$location)");
+	}
 
 	# Fail when the input is just a set of numbers
-	if($params{'location'} !~ /\D/) {
-		Carp::croak('Usage: ', __PACKAGE__, ": invalid input to geocode(), $params{location}");
+	if($location !~ /\D/) {
+		Carp::croak('Usage: ', __PACKAGE__, ": invalid input to geocode(), $location");
 		return;
 	}
 
@@ -181,6 +208,17 @@ this will generate an error.
 
 sub reverse_geocode {
 	Carp::carp('datasciencetoolkit.org does not support reverse encoding');
+}
+
+# Could the value handed to it be a location?  Only a reference gets asked here,
+# and the answer is whatever Geo::Coder::Free::Validate says when it is
+# installed.  Without it, a reference is refused: only a string can name a
+# place, and there is nothing in this module that could make sense of a
+# reference that claims otherwise.
+sub _could_be_a_location {
+	my $value = shift;
+
+	return $have_validate ? Geo::Coder::Free::Validate::_valid_location($value) : 0;
 }
 
 =head1 AUTHOR
