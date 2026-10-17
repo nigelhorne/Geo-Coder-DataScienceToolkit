@@ -4,8 +4,7 @@ use warnings;
 use strict;
 
 use Test::Most tests => 16;
-use Test::Number::Delta;
-use Test::Needs 'Test::LWP::UserAgent', 'Test::Carp';
+use Test::Needs 'Test::LWP::UserAgent', 'Test::Carp', 'Test::Number::Delta';
 
 BEGIN {
 	use_ok('Geo::Coder::DataScienceToolkit');
