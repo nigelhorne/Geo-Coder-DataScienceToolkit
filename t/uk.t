@@ -4,7 +4,6 @@ use warnings;
 use strict;
 
 use Test::Most tests => 16;
-use Test::Carp;
 use Test::Number::Delta;
 use Test::Needs 'Test::LWP::UserAgent', 'Test::Carp';
 
