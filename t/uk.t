@@ -4,7 +4,6 @@ use warnings;
 use strict;
 
 use Test::Most tests => 16;
-use Test::LWP::UserAgent;
 use Test::Carp;
 use Test::Number::Delta;
 
@@ -23,6 +22,12 @@ UK: {
 				skip('Test requires Internet access', 15);
 			}
 		}
+
+		eval {
+			require Test::LWP::UserAgent;
+
+			Test::LWP::UserAgent->import();
+		};
 
 		my $geocoder = new_ok('Geo::Coder::DataScienceToolkit');
 
