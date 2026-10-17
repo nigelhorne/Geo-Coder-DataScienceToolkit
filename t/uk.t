@@ -6,6 +6,7 @@ use strict;
 use Test::Most tests => 16;
 use Test::Carp;
 use Test::Number::Delta;
+use Test::Needs 'Test::LWP::UserAgent', 'Test::Carp';
 
 BEGIN {
 	use_ok('Geo::Coder::DataScienceToolkit');
@@ -22,12 +23,6 @@ UK: {
 				skip('Test requires Internet access', 15);
 			}
 		}
-
-		eval {
-			require Test::LWP::UserAgent;
-
-			Test::LWP::UserAgent->import();
-		};
 
 		my $geocoder = new_ok('Geo::Coder::DataScienceToolkit');
 
