@@ -37,6 +37,7 @@ if($ENV{'AUTHOR_TESTING'}) {
 }
 
 my $test_requires = {
+	'Test::DescribeMe' => 0,
 	'Test::Most' => 0,
 	'Test::Needs' => 0,
 	'Test::NoWarnings' => 0
@@ -122,7 +123,7 @@ EOF
 		# Timeout inspired by Mail::IMAPClient
 		my $rc;
 		eval {
-			local $SIG{ALRM} = sub { die "alarm\n" };
+			local $SIG{ALRM} = sub { die 'alarm' };
 			alarm(60);
 			$rc = prompt('Do you want to enable these tests?', 'y') =~ /^y/i ? 1 : 0;
 			alarm(0);

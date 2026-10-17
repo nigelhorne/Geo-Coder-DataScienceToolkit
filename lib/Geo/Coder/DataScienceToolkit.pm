@@ -268,7 +268,7 @@ L<http://deps.cpantesters.org/?module=Geo-Coder-DataScienceToolkit>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2019-2024 Nigel Horne.
+Copyright 2019-2026 Nigel Horne.
 
 This program is released under the following licence: GPL2
 
