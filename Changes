@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-DataScienceToolkit
 
-0.03
+0.03	Sat Oct 17 07:58:42 PM EDT 2026
 	geocode(): croak when input is just a set of numbers
 	Use JSON::MaybeXS instead of JSON
 	Use gtar to create a distribution on Macs

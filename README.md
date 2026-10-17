@@ -5,7 +5,7 @@ http://www.datasciencetoolkit.org/
 
 ## Version
 
-Version 0.02
+Version 0.03
 
 ## Synopsis
 
@@ -111,6 +111,6 @@ You can also look for information at:
 
 ## License and Copyright
 
-Copyright 2019-2024 Nigel Horne.
+Copyright 2019-2026 Nigel Horne.
 
 This program is released under the following licence: GPL2
